@@ -1,0 +1,30 @@
+# Имя workflow
+name: Triggers
+# Триггер: запускать при каждом push но только в main и только если изменялись файлы в папке src
+on:
+    push:
+        branches: [main]
+        paths:
+            - 'src/**'
+    #Ручной запуск workflow через вкладку Actions
+    workflow_dispatch:
+        inputs:
+            env:                                #Имя папраметра придумай сам
+                description: 'Куда деплоить?'   # Подсказка в форме запуска
+                type: choice                    # Тип параметра: выбор из списка
+                options: [dev, prod]            # Варианты выбора
+                default: dev
+    # По рассписанию в каждый понедельник 06:00 UTC = 09:00 по Москве
+    schedule:
+        - cron: '0 6 * * 1' 
+jobs:
+    show-trigger:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Что нас запустило?
+              env:
+                EVENT: ${{ github.event_name }}  #push, workflow_dispatch, schedule
+                TARGET: ${{ inputs.env }}        #Выбор из формы , при других событиях пусто
+              run: |
+               echo "Событие: $EVENT"
+               echo "Окружение: $TARGET"
