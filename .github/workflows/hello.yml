@@ -5,5 +5,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Привет, ${{ github.actor }}! Ветка: ${{ github.ref_name }}"
+      - run: | 
+          echo "Привет, ${{ github.actor }}! Ветка: ${{ github.ref_name }}"
       - run: ls -la
