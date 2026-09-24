@@ -1,0 +1,36 @@
+name: Pipeline
+on: [push]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        # Публикуем результат шага наружу для других jobs
+        outputs:
+            version: ${{ steps.ver.outputs.version }}
+        steps:
+            - name: Вычислить версию
+            # id нужен для того, чтобы можно было сослаться на шаг в outputs
+              id: ver
+              # 1. Записываем "ключ=значение" в спец.файл $GITHUB_OUTPUT 
+              # 2. Это становится steps.ver.outputs.version
+              run: |
+                echo "version=1.0.${{ github.run_number }}" >> $GITHUB_OUTPUT
+    deploy:
+        needs: build
+        runs-on: ubuntu-latest
+        steps:
+            - name: Деплой
+              env:
+                # Забираем значение из outputs предыдущего job
+                VERSION: ${{ needs.build.outputs.version }}
+              run: |
+                echo "Деплою версию $VERSION"
+    notify:
+        needs: [build, deploy]
+        # Запускать, если предыдущие jobs завершились успешно
+        if: failure()
+        runs-on: ubuntu-latest
+        steps:
+            - name: Оповещение
+              run: |
+                echo "Что-то упало в пайплайне"
