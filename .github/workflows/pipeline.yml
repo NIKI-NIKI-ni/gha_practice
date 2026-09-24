@@ -25,7 +25,6 @@ jobs:
                 VERSION: ${{ needs.build.outputs.version }}
               run: |
                 echo "Деплою версию $VERSION"
-          # Симулируем падение деплоя, чтобы проверить работу notify
                 exit 1  
     notify:
         needs: [build, deploy]
