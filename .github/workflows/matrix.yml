@@ -1,0 +1,24 @@
+name: Matrix
+on: [push]
+
+jobs:
+  test:
+    strategy:
+        # ЕСли одна комбинация упала остальные Не отменятся
+        fail-fast: false
+        matrix:
+          os: [ubuntu-latest, windows-latest]
+          # Версии в кавычках, чтобы не было проблем с точкой в версии
+          py: ["3.11", "3.12"]
+    # Берем ОС из текущей комбинации матрицы
+         runs-on: ${{ matrix.os }}
+         steps:
+        - name: Установка Python
+          uses: actions/setup-python@v5
+          #with = параметры для action
+          with:
+            python-version: ${{ matrix.py }}
+        - name: Проверка весии Python
+          run: |
+            python --version   
+            echo "OS: ${{ runner.os }} Python: ${{ matrix.py }}"
