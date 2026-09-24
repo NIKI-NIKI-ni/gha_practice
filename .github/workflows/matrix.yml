@@ -10,9 +10,9 @@ jobs:
           os: [ubuntu-latest, windows-latest]
           # Версии в кавычках, чтобы не было проблем с точкой в версии
           py: ["3.11", "3.12"]
-    # Берем ОС из текущей комбинации матрицы
-         runs-on: ${{ matrix.os }}
-         steps:
+      # Берем ОС из текущей комбинации матрицы
+    runs-on: ${{ matrix.os }}
+    steps:
         - name: Установка Python
           uses: actions/setup-python@v5
           #with = параметры для action
